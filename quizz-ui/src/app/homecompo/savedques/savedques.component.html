@@ -1,0 +1,42 @@
+<div class="container">
+
+    <table class="table text-primary">
+        <thead class="thead-dark">
+            <tr>
+                <th class="questionwidth" scope="col">Saved Questions</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            <ul class="list-unstyled w-100">
+                <li class="card card-body mb-2" *ngFor="let ques of questions">
+                    <div class="d-flex justify-content-between">
+                        <h5>
+                            {{ ques.ques }}
+                            <small>
+                          <button
+                            (click)="ques.hide = !ques.hide"
+                            class="btn btn-dark btn-sm"
+                          >
+                            <i [ngClass]="ques.hide ? 'fa fa-minus' : 'fa fa-plus'"></i>
+                          </button>
+                          <button type="button" class="btn btn-danger">
+                            Delete
+                          </button>
+              </small>
+                        </h5>
+
+                        <div class=""></div>
+                    </div>
+
+                    <ul class="list-group" *ngIf="ques.hide">
+                        <li class="list-group-item m-2">A: {{ ques.A }}</li>
+                        <li class="list-group-item m-2">B: {{ ques.B }}</li>
+                        <li class="list-group-item m-2">C: {{ ques.C }}</li>
+                        <li class="list-group-item m-2">D: {{ ques.D }}</li>
+                    </ul>
+                </li>
+            </ul>
+        </tbody>
+    </table>
+</div>
