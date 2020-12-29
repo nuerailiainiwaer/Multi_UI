@@ -35,16 +35,21 @@ export class SavedService {
     const _deleteScoreforTheUser = `http://localhost:5000/api/v1/score/${id}/delete`;
     return this.http.delete<any>(_deleteScoreforTheUser);
   }
-  // savedQuestion(ques: any, person: any, arra: any) {
-  //   let body = { saved: [] };
-  //   console.log(arra);
-  //   var cc = arra.push(person);
-  //   console.log(cc);
-  //   const saveQues = `http://localhost:5000/api/v1/questions/save/${ques}`;
-  //   return this.http.put<any>(saveQues, body);
-  // }
-  // saveQuestions(id:any){
-  //   const _savedQuestion= `http://localhost:5000/api/v1/score/${id}/delete`;
 
-  // }
+  body: any = { saved: [] };
+  savedQuestion(ques: any, person: any) {
+    this.getSingleQues(ques).subscribe((res) => {
+      this.body.saved = res.data.saved;
+      this.body.saved.push(person);
+      console.log(this.body.saved);
+      this.savequestionInput(ques);
+    });
+  }
+  savequestionInput(id: any) {
+    const saveQues = `http://localhost:5000/api/v1/questions/save/${id}`;
+    return this.http.put<any>(saveQues, this.body);
+  }
+  saveQuestions(id: any) {
+    const _savedQuestion = `http://localhost:5000/api/v1/score/${id}/delete`;
+  }
 }

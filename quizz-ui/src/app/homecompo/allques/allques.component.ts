@@ -39,6 +39,7 @@ export class AllquesComponent implements OnInit {
     D: '',
     anS: '',
     photo: '',
+    saved: '',
   };
   constructor(
     private getques: GetquesService,
@@ -47,11 +48,33 @@ export class AllquesComponent implements OnInit {
     this.meme = new Array<any>();
     this.meme1 = new Array<any>();
     this.meme2 = new Array<any>();
+
     this.savedquestions = new Array<any>();
   }
 
   ngOnInit(): void {
     this.bibi();
+  }
+  meme5: any;
+
+  nylove() {
+    var n;
+    console.log(' i am in');
+    console.log(this.speccificQues.saved);
+    if (this.speccificQues.saved === '') {
+      console.log('empty');
+    } else {
+      // this.doneQuesmeme.getQues().subscribe(
+      //   (res) => console.log(res.data._id));
+      this.doneQuesmeme.getQues().subscribe((ques) => {
+        console.log(ques.data);
+        this.meme5 = ques.data._id;
+        n = this.speccificQues.saved.includes(this.meme5);
+        if (n) {
+          this.questionDone = false;
+        }
+      });
+    }
   }
   anwar(array: any) {
     var i;
@@ -85,6 +108,7 @@ export class AllquesComponent implements OnInit {
     this.backtoBlack();
     document.getElementById('ques_container').style.display = 'block';
     this.changeBackground();
+    this.nylove();
   }
   fireEvent1(id: any) {
     this.speccificQues = this.meme1[id];
@@ -166,19 +190,34 @@ export class AllquesComponent implements OnInit {
 
   done() {
     this.doneQuesmeme.getSingleQues(this.speccificQues._id).subscribe((res) => {
-     
-      console.log(res.data.saved);
-      console.log(res.data.saved);
-      this.savedquestions=[...res.data.saved]
-      consolge.log( this.savedquestions)
-     
+      this.savedquestions = res.data.saved;
+      this.doneQuesmeme.getQues().subscribe((res) => {
+        console.log(res.data._id);
+        var n = this.savedquestions.includes(res.data._id);
+        if (n) {
+          this.questionDone = false;
+        }
+        // var i;
+        // for (i = 0; i < this.savedquestions.length; i++) {
+        //   if (this.savedquestions[i] === res.data._id) {
+        //     console.log(' the question is saved');
+        //     break;
+        //   }
+        // }
+
+        // for (const value of this.savedquestions) {
+        //   if (value === res.data._id) {
+        //     console.log('the question is already saved');
+        //     break;
+        //   }
+        // }
+        // this.addUsermm(this.speccificQues._id, res.data._id);
+      });
     });
   }
-  // addUsermm(questions: any, person: any, savedQuestiondidi: any) {
-  //   this.doneQuesmeme
-  //     .savedQuestion(questions, person, savedQuestiondidi)
-  //     .subscribe((res) => {
-  //       console.log(res);
-  //     });
+  // addUsermm(questions: any, person: any) {
+  //   this.doneQuesmeme.savedQuestion(questions, person).subscribe((res) => {
+  //     console.log(res);
+  //   });
   // }
 }
