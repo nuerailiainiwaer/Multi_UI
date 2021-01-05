@@ -26,10 +26,25 @@ export class AuthService {
   }
   logoutUser() {
     localStorage.removeItem('token');
-    this._rooter.navigate(['/events']);
+    this._rooter.navigate(['/']);
   }
   changingauthToTrue() {
     const body = { auth: true };
     return this.http.put<any>(this._authtotrue, body);
+  }
+
+  saveQuestion(quesid: any, userid: any) {
+    const user = { userID: userid, quesID: quesid };
+    const savedQuestion = 'http://localhost:5000/api/v1/savedquestions';
+    return this.http.post<any>(savedQuestion, user);
+  }
+  checkSavedQues(personid: any, quesId: any) {
+    const body = { userID: personid, quesID: quesId };
+    const checksavedQues = `http://localhost:5000/api/v1/savedquestions/gettrue`;
+    return this.http.put<any>(checksavedQues, body);
+  }
+  deleteSavedQuestion(id: any) {
+    const checksavedQues = `http://localhost:5000/api/v1/savedquestions/${id}`;
+    return this.http.delete<any>(checksavedQues);
   }
 }

@@ -19,6 +19,12 @@ import { AboutusComponent } from './homecompo/aboutus/aboutus.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { FormsModule } from '@angular/forms';
 import { TokenInterceptorService } from './services/token-interceptor.service';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
+import { Ng2OrderModule } from 'ng2-order-pipe';
+import { MockresultComponent } from './homecompo/mockresult/mockresult.component';
+import { AuthGuard } from './auth.guard';
 
 @NgModule({
   declarations: [
@@ -36,6 +42,8 @@ import { TokenInterceptorService } from './services/token-interceptor.service';
     MyprogressComponent,
 
     AboutusComponent,
+
+    MockresultComponent,
   ],
   imports: [
     BrowserModule,
@@ -43,8 +51,13 @@ import { TokenInterceptorService } from './services/token-interceptor.service';
     HttpClientModule,
     NgxPaginationModule,
     FormsModule,
+    BrowserAnimationsModule,
+    MatButtonToggleModule,
+    Ng2SearchPipeModule,
+    Ng2OrderModule,
   ],
   providers: [
+    { provide: AuthGuard, useClass: AuthGuard },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptorService,

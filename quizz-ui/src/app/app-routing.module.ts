@@ -12,16 +12,18 @@ import { SearchComponent } from './homecompo/search/search.component';
 import { SavedquesComponent } from './homecompo/savedques/savedques.component';
 import { MyprogressComponent } from './homecompo/myprogress/myprogress.component';
 import { AboutusComponent } from './homecompo/aboutus/aboutus.component';
+import { MockresultComponent } from './homecompo/mockresult/mockresult.component';
+import { AuthGuard } from './auth.guard';
 
 const routes: Routes = [
   { path: '', component: StarterComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
-  { path: 'home', component: HomeComponent },
+  { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
   { path: 'auth', component: AuthcodeComponent },
   { path: 'forgotpassword', component: ForgotpasswordComponent },
   { path: 'allquestions', component: AllquesComponent },
-  { path: 'mocktest', component: MockComponent },
+  { path: 'mocktest', component: MockresultComponent },
   { path: 'searchquestion', component: SearchComponent },
   { path: 'savedquetions', component: SavedquesComponent },
   { path: 'myprogress', component: MyprogressComponent },

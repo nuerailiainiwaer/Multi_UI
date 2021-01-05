@@ -30,6 +30,7 @@ export class MyprogressComponent implements OnInit {
     this.meme.deleteSingleScore(id).subscribe(
       (res) => {
         console.log(res);
+        window.location.reload();
       },
       (err) => console.log(err)
     );

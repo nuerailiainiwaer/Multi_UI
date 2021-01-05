@@ -4,6 +4,9 @@ import { Observable } from 'rxjs';
 import { GetquesService } from '../../services/getques.service';
 import { connectableObservableDescriptor } from 'rxjs/internal/observable/ConnectableObservable';
 import { SavedService } from 'src/app/services/saved.service';
+import { createContentChildren } from '@angular/compiler/src/core';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-allques',
@@ -43,13 +46,13 @@ export class AllquesComponent implements OnInit {
   };
   constructor(
     private getques: GetquesService,
-    private doneQuesmeme: SavedService
+    private doneQuesmeme: SavedService,
+    private authService: AuthService
   ) {
     this.meme = new Array<any>();
     this.meme1 = new Array<any>();
     this.meme2 = new Array<any>();
-
-    this.savedquestions = new Array<any>();
+    this.arrrr = new Array<any>();
   }
 
   ngOnInit(): void {
@@ -57,25 +60,6 @@ export class AllquesComponent implements OnInit {
   }
   meme5: any;
 
-  nylove() {
-    var n;
-    console.log(' i am in');
-    console.log(this.speccificQues.saved);
-    if (this.speccificQues.saved === '') {
-      console.log('empty');
-    } else {
-      // this.doneQuesmeme.getQues().subscribe(
-      //   (res) => console.log(res.data._id));
-      this.doneQuesmeme.getQues().subscribe((ques) => {
-        console.log(ques.data);
-        this.meme5 = ques.data._id;
-        n = this.speccificQues.saved.includes(this.meme5);
-        if (n) {
-          this.questionDone = false;
-        }
-      });
-    }
-  }
   anwar(array: any) {
     var i;
     var arr = [];
@@ -101,6 +85,8 @@ export class AllquesComponent implements OnInit {
   }
 
   fireEvent(id: any) {
+    this.toggledBtn = true;
+    this.saveButton = true;
     document.getElementById('picture').style.display = 'none';
     this.speccificQues = this.meme[id];
     this.picTure(this.meme[id].photo, this.meme[id]._id);
@@ -109,18 +95,23 @@ export class AllquesComponent implements OnInit {
     document.getElementById('ques_container').style.display = 'block';
     this.changeBackground();
     this.nylove();
+    this.checkthesave();
   }
   fireEvent1(id: any) {
+    this.toggledBtn = true;
     this.speccificQues = this.meme1[id];
     this.picTure(this.meme1[id].photo, this.meme1[id]._id);
     this.backtoBlack();
     document.getElementById('ques_container').style.display = 'block';
+    this.nylove();
   }
   fireEvent2(id: any) {
+    this.toggledBtn = true;
     this.speccificQues = this.meme2[id];
     this.picTure(this.meme2[id].photo, this.meme2[id]._id);
     this.backtoBlack();
     document.getElementById('ques_container').style.display = 'block';
+    this.nylove();
   }
   picTure(pho: any, id: any) {
     if (pho !== 'nurili') {
@@ -184,40 +175,142 @@ export class AllquesComponent implements OnInit {
   changeBackground() {
     document.getElementById('damda').classList.add('hidden');
   }
-
-  save() {}
-  savedquestions: Array<any>;
-
-  done() {
-    this.doneQuesmeme.getSingleQues(this.speccificQues._id).subscribe((res) => {
-      this.savedquestions = res.data.saved;
-      this.doneQuesmeme.getQues().subscribe((res) => {
-        console.log(res.data._id);
-        var n = this.savedquestions.includes(res.data._id);
-        if (n) {
-          this.questionDone = false;
-        }
-        // var i;
-        // for (i = 0; i < this.savedquestions.length; i++) {
-        //   if (this.savedquestions[i] === res.data._id) {
-        //     console.log(' the question is saved');
-        //     break;
-        //   }
-        // }
-
-        // for (const value of this.savedquestions) {
-        //   if (value === res.data._id) {
-        //     console.log('the question is already saved');
-        //     break;
-        //   }
-        // }
-        // this.addUsermm(this.speccificQues._id, res.data._id);
-      });
+  ///////////////
+  saveButton: boolean = true;
+  saveToggle() {
+    if (this.saveButton) {
+      this.save();
+    } else if (!this.saveButton) {
+      this.deleteSavedQues();
+    }
+  }
+  deleteSavedQues() {
+    this.doneQuesmeme.getQues().subscribe((res) => {
+      var userid = res.data._id;
+      var userid = res.data._id;
+      this.authService
+        .checkSavedQues(userid, this.speccificQues._id)
+        .subscribe((res1) => {
+          console.log(res1.data[0]._id);
+          this.authService
+            .deleteSavedQuestion(res1.data[0]._id)
+            .subscribe((res) => {
+              console.log(res.success);
+              if (res.success) {
+                this.saveButton = true;
+              }
+            });
+        });
     });
   }
-  // addUsermm(questions: any, person: any) {
-  //   this.doneQuesmeme.savedQuestion(questions, person).subscribe((res) => {
-  //     console.log(res);
-  //   });
-  // }
+
+  checkthesave() {
+    this.doneQuesmeme.getQues().subscribe((res) => {
+      var userid = res.data._id;
+      this.authService
+        .checkSavedQues(userid, this.speccificQues._id)
+        .subscribe((res) => {
+          if (typeof res.data[0] == 'undefined') {
+            console.log('yearh');
+          } else if (typeof res.data[0] === 'object') {
+            this.saveButton = false;
+          }
+        });
+    });
+  }
+  save() {
+    this.doneQuesmeme.getQues().subscribe((res) => {
+      var userid = res.data._id;
+      this.authService
+        .saveQuestion(this.speccificQues._id, userid)
+        .subscribe((res) => {
+          console.log(res.data._id);
+        });
+    });
+    this.checkthesave();
+  }
+
+  test: any[] = [];
+
+  ///////////////////////////
+  toggledBtn: boolean = true;
+  toggle() {
+    if (this.toggledBtn) {
+      this.done();
+    } else if (!this.toggledBtn) {
+      this.deleteMe();
+    }
+  }
+
+  // var arrrr = [];
+
+  arrrr: Array<any> = [];
+
+  deleteMe() {
+    var i;
+    for (i = 0; i < this.speccificQues.saved.length; i++) {
+      this.arrrr.push(this.speccificQues.saved[i]);
+    }
+    var cc = [];
+
+    const index = this.arrrr.indexOf(this.speccificQues._id);
+    if (index > -1) {
+      cc = this.arrrr.splice(index, 1);
+    }
+    console.log(cc);
+
+    this.doneQuesmeme
+      .addTosavedQues(this.speccificQues._id, cc)
+      .subscribe((res) => {
+        this.toggledBtn = true;
+        this.speccificQues.saved = res.data.saved;
+        this.nylove();
+
+        // window.location.reload();
+      });
+  }
+
+  nylove() {
+    var n;
+    console.log(' i am in');
+    if (this.speccificQues.saved === '') {
+      console.log('empty');
+    } else {
+      this.doneQuesmeme.getQues().subscribe((ques) => {
+        this.meme5 = ques.data._id;
+
+        n = this.speccificQues.saved.includes(this.meme5);
+
+        if (n) {
+          this.toggledBtn = false;
+          // this.questionDone = false;
+        }
+      });
+    }
+  }
+
+  done() {
+    this.doneQuesmeme.getQues().subscribe((res) => {
+      console.log(res.data._id);
+      var n = this.speccificQues.saved.includes(res.data._id);
+      console.log(n);
+
+      if (!n) {
+        var i;
+        for (i = 0; i < this.speccificQues.saved.length; i++) {
+          this.test.push(this.speccificQues.saved[i]);
+        }
+        this.test.push(res.data._id);
+      }
+      this.doneQuesmeme
+        .addTosavedQues(this.speccificQues._id, this.test)
+        .subscribe((res) => {
+          this.test = [];
+          console.log(res.data.saved);
+
+          this.speccificQues.saved = res.data.saved;
+          this.nylove();
+        });
+    });
+  }
 }

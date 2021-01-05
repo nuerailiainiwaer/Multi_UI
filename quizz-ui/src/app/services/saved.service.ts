@@ -36,20 +36,9 @@ export class SavedService {
     return this.http.delete<any>(_deleteScoreforTheUser);
   }
 
-  body: any = { saved: [] };
-  savedQuestion(ques: any, person: any) {
-    this.getSingleQues(ques).subscribe((res) => {
-      this.body.saved = res.data.saved;
-      this.body.saved.push(person);
-      console.log(this.body.saved);
-      this.savequestionInput(ques);
-    });
-  }
-  savequestionInput(id: any) {
-    const saveQues = `http://localhost:5000/api/v1/questions/save/${id}`;
-    return this.http.put<any>(saveQues, this.body);
-  }
-  saveQuestions(id: any) {
-    const _savedQuestion = `http://localhost:5000/api/v1/score/${id}/delete`;
+  addTosavedQues(person: any, arr: any) {
+    const body = { saved: arr };
+    const bbbbbbb = `http://localhost:5000/api/v1/questions/save/${person}`;
+    return this.http.put<any>(bbbbbbb, body);
   }
 }

@@ -9,6 +9,17 @@ import { SavedService } from '../../services/saved.service';
 export class SavedquesComponent implements OnInit {
   questions: Array<any>;
   user_id: any;
+  speccificQues = {
+    _id: '',
+    ques: '',
+    A: '',
+    B: '',
+    C: '',
+    D: '',
+    anS: '',
+    photo: '',
+    saved: '',
+  };
 
   constructor(private meme: SavedService) {}
 

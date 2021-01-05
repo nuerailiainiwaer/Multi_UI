@@ -95,9 +95,9 @@
 
                 </div>
                 <div class="pt-2" id="ques_container" style="display: none; width: 100%; height: 100%; background-color:  #f7faff;">
-                    <h5 class="questitle text-primary text-center">
+                    <h3 class="questitle text-primary text-center">
                         {{ speccificQues.ques }}
-                    </h5>
+                    </h3>
                     <div class="row">
                         <div class="col-12">
                             <label (click)="addUser('A')" class="text-primary container selection">
@@ -130,11 +130,11 @@
 
                     </div>
                     <h4 class="text-danger w-100 d-flex justify-content-around mt-5 ">
-                        <a (click)="save() ">
-                            <i [ngClass]="savedQues ? 'fa fa-star-o' : 'fa fa-star' "></i> &nbsp;Save
+                        <a (click)="saveToggle() ">
+                            <i [ngClass]="saveButton ? 'fa fa-star-o' : 'fa fa-star' "></i> &nbsp;Save
                         </a>
-                        <a (click)="done() ">
-                            <i [ngClass]="questionDone ? 'fa fa-thumbs-o-up' : 'fa fa-thumbs-up' "></i> &nbsp;Done
+                        <a (click)=" toggle() ">
+                            <i [ngClass]=" toggledBtn? 'fa fa-thumbs-o-up' : 'fa fa-thumbs-up' "></i> &nbsp;Done
                         </a>
 
                     </h4>
